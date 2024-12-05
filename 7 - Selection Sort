@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void ordenacaoSelecao(vector<int>& vetor) {
+    int tamanho = vetor.size();
+    
+    for (int i = 0; i < tamanho - 1; i++) {
+        int indiceMinimo = i;
+        for (int j = i + 1; j < tamanho; j++) {
+            if (vetor[j] < vetor[indiceMinimo]) {
+                indiceMinimo = j;
+            }
+        }
+        
+        if (indiceMinimo != i) {
+            swap(vetor[i], vetor[indiceMinimo]);
+        }
+
+        cout << "Iteração " << i + 1 << ": ";
+        for (int numero : vetor) {
+            cout << numero << " ";
+        }
+        cout << endl;
+    }
+}
+
+void imprimirVetor(const vector<int>& vetor) {
+    for (int numero : vetor) {
+        cout << numero << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    vector<int> vetor = {64, 25, 12, 22, 11};
+
+    cout << "Vetor original: ";
+    imprimirVetor(vetor);
+
+    ordenacaoSelecao(vetor);
+
+    cout << "Vetor ordenado: ";
+    imprimirVetor(vetor);
+
+    return 0;
+}
