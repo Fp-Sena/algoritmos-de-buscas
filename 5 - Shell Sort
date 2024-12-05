@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void ordenacaoShell(vector<int>& vetor, vector<int>& intervalos) {
+    int tamanho = vetor.size();
+    for (int intervalo : intervalos) {
+        for (int i = intervalo; i < tamanho; i++) {
+            int temp = vetor[i];
+            int j = i;
+            while (j >= intervalo && vetor[j - intervalo] > temp) {
+                vetor[j] = vetor[j - intervalo];
+                j -= intervalo;
+            }
+            vetor[j] = temp;
+        }
+    }
+}
+
+vector<int> sequenciaShell(int n) {
+    vector<int> intervalos;
+    for (int intervalo = n / 2; intervalo > 0; intervalo /= 2) {
+        intervalos.push_back(intervalo);
+    }
+    return intervalos;
+}
+
+vector<int> sequenciaKnuth(int n) {
+    vector<int> intervalos;
+    int intervalo = 1;
+    while (intervalo < n) {
+        intervalos.push_back(intervalo);
+        intervalo = 3 * intervalo + 1;
+    }
+    return intervalos;
+}
+
+vector<int> sequenciaHibbard(int n) {
+    vector<int> intervalos;
+    for (int i = 1; (1 << i) - 1 < n; i++) {
+        intervalos.push_back((1 << i) - 1);
+    }
+    return intervalos;
+}
+
+void imprimirVetor(const vector<int>& vetor) {
+    for (int numero : vetor) {
+        cout << numero << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    vector<int> vetor = {19, 3, 10, 15, 7, 8, 23, 74, 18, 27, 43};
+    
+    vector<int> intervalos = sequenciaShell(vetor.size());
+    cout << "Sequência de Shell Sort: ";
+    for (int intervalo : intervalos) {
+        cout << intervalo << " ";
+    }
+    cout << endl;
+
+    ordenacaoShell(vetor, intervalos);
+    cout << "Vetor ordenado com Shell Sort: ";
+    imprimirVetor(vetor);
+
+    vetor = {19, 3, 10, 15, 7, 8, 23, 74, 18, 27, 43};
+
+    intervalos = sequenciaKnuth(vetor.size());
+    cout << "\nSequência de Knuth: ";
+    for (int intervalo : intervalos) {
+        cout << intervalo << " ";
+    }
+    cout << endl;
+
+    ordenacaoShell(vetor, intervalos);
+    cout << "Vetor ordenado com Knuth Sequence: ";
+    imprimirVetor(vetor);
+
+    vetor = {19, 3, 10, 15, 7, 8, 23, 74, 18, 27, 43};
+
+    intervalos = sequenciaHibbard(vetor.size());
+    cout << "\nSequência de Hibbard: ";
+    for (int intervalo : intervalos) {
+        cout << intervalo << " ";
+    }
+    cout << endl;
+
+    ordenacaoShell(vetor, intervalos);
+    cout << "Vetor ordenado com Hibbard Sequence: ";
+    imprimirVetor(vetor);
+
+    return 0;
+}
