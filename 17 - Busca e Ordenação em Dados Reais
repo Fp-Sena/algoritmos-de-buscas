@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+struct Estudante {
+    string nome;
+    int nota;
+
+    bool operator<(const Estudante& outroEstudante) const {
+        return nota < outroEstudante.nota;
+    }
+};
+
+void ordenarPorBucket(vector<Estudante>& listaEstudantes) {
+    const int notaMaxima = 100;
+    vector<vector<Estudante>> buckets(notaMaxima + 1);
+
+    for (const Estudante& estudante : listaEstudantes) {
+        buckets[estudante.nota].push_back(estudante);
+    }
+
+    listaEstudantes.clear();
+    for (auto& bucket : buckets) {
+        for (const Estudante& estudante : bucket) {
+            listaEstudantes.push_back(estudante);
+        }
+    }
+}
+
+int buscaPorInterpolacao(const vector<Estudante>& listaEstudantes, int notaProcurada) {
+    int limiteInferior = 0, limiteSuperior = listaEstudantes.size() - 1;
+
+    while (limiteInferior <= limiteSuperior &&
+           notaProcurada >= listaEstudantes[limiteInferior].nota &&
+           notaProcurada <= listaEstudantes[limiteSuperior].nota) {
+        int posicao = limiteInferior + ((notaProcurada - listaEstudantes[limiteInferior].nota) *
+                                        (limiteSuperior - limiteInferior)) /
+                                       (listaEstudantes[limiteSuperior].nota - listaEstudantes[limiteInferior].nota);
+
+        if (listaEstudantes[posicao].nota == notaProcurada) {
+            return posicao;
+        } else if (listaEstudantes[posicao].nota < notaProcurada) {
+            limiteInferior = posicao + 1;
+        } else {
+            limiteSuperior = posicao - 1;
+        }
+    }
+
+    return -1; // Nota não encontrada
+}
+
+int main() {
+    vector<Estudante> listaEstudantes = {
+        {"Alice", 85}, {"Bruno", 70}, {"Carlos", 95}, {"Diana", 60},
+        {"Eduardo", 75}, {"Fernanda", 50}, {"Gabriela", 100}, {"Henrique", 80}
+    };
+
+    cout << "Lista original de estudantes:\n";
+    for (const Estudante& estudante : listaEstudantes) {
+        cout << estudante.nome << " - Nota: " << estudante.nota << "\n";
+    }
+
+    ordenarPorBucket(listaEstudantes);
+
+    cout << "\nLista de estudantes ordenada por nota:\n";
+    for (const Estudante& estudante : listaEstudantes) {
+        cout << estudante.nome << " - Nota: " << estudante.nota << "\n";
+    }
+
+    int notaProcurada;
+    cout << "\nDigite a nota que deseja buscar: ";
+    cin >> notaProcurada;
+
+    int indice = buscaPorInterpolacao(listaEstudantes, notaProcurada);
+    if (indice != -1) {
+        cout << "Estudante encontrado:\n";
+        cout << listaEstudantes[indice].nome << " - Nota: " << listaEstudantes[indice].nota << "\n";
+    } else {
+        cout << "Nenhum estudante encontrado com a nota " << notaProcurada << ".\n";
+    }
+
+    return 0;
+}
