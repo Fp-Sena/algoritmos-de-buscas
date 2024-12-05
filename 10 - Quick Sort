@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void trocar(int& a, int& b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+int particionarPrimeiro(vector<int>& vetor, int baixo, int alto) {
+    int pivo = vetor[baixo];
+    int esquerda = baixo + 1;
+    int direita = alto;
+
+    while (esquerda <= direita) {
+        while (esquerda <= direita && vetor[esquerda] <= pivo)
+            esquerda++;
+        while (esquerda <= direita && vetor[direita] > pivo)
+            direita--;
+        if (esquerda < direita)
+            trocar(vetor[esquerda], vetor[direita]);
+    }
+    trocar(vetor[baixo], vetor[direita]);
+    return direita;
+}
+
+int particionarUltimo(vector<int>& vetor, int baixo, int alto) {
+    int pivo = vetor[alto];
+    int esquerda = baixo;
+    int direita = alto - 1;
+
+    while (esquerda <= direita) {
+        while (esquerda <= direita && vetor[esquerda] <= pivo)
+            esquerda++;
+        while (esquerda <= direita && vetor[direita] > pivo)
+            direita--;
+        if (esquerda < direita)
+            trocar(vetor[esquerda], vetor[direita]);
+    }
+    trocar(vetor[alto], vetor[esquerda]);
+    return esquerda;
+}
+
+int particionarMeio(vector<int>& vetor, int baixo, int alto) {
+    int meio = baixo + (alto - baixo) / 2;
+    trocar(vetor[meio], vetor[baixo]);
+    return particionarPrimeiro(vetor, baixo, alto);
+}
+
+void quickSort(vector<int>& vetor, int baixo, int alto, int criterio) {
+    if (baixo < alto) {
+        int indicePivo;
+        if (criterio == 1)
+            indicePivo = particionarPrimeiro(vetor, baixo, alto);
+        else if (criterio == 2)
+            indicePivo = particionarUltimo(vetor, baixo, alto);
+        else
+            indicePivo = particionarMeio(vetor, baixo, alto);
+
+        quickSort(vetor, baixo, indicePivo - 1, criterio);
+        quickSort(vetor, indicePivo + 1, alto, criterio);
+    }
+}
+
+int main() {
+    vector<int> vetor = {34, 7, 23, 32, 5, 62};
+    int criterio;
+
+    cout << "Escolha o critério para o pivô: 1 (primeiro), 2 (último), 3 (meio): ";
+    cin >> criterio;
+
+    quickSort(vetor, 0, vetor.size() - 1, criterio);
+
+    cout << "Vetor ordenado: ";
+    for (int numero : vetor)
+        cout << numero << " ";
+    cout << endl;
+
+    return 0;
+}
