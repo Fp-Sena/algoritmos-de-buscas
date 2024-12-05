@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+struct Livro {
+    string titulo;
+    string autor;
+    string isbn;
+
+    bool operator<(const Livro& outroLivro) const {
+        return isbn < outroLivro.isbn;
+    }
+
+    bool operator==(const string& isbnProcurado) const {
+        return isbn == isbnProcurado;
+    }
+};
+
+bool buscaBinaria(const vector<Livro>& biblioteca, const string& isbnProcurado, Livro& resultado) {
+    int inicio = 0, fim = biblioteca.size() - 1;
+
+    while (inicio <= fim) {
+        int meio = inicio + (fim - inicio) / 2;
+
+        if (biblioteca[meio].isbn == isbnProcurado) {
+            resultado = biblioteca[meio];
+            return true;
+        } else if (biblioteca[meio].isbn < isbnProcurado) {
+            inicio = meio + 1;
+        } else {
+            fim = meio - 1;
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    vector<Livro> biblioteca = {
+        {"Dom Casmurro", "Machado de Assis", "9781234567890"},
+        {"1984", "George Orwell", "9781234567891"},
+        {"O Pequeno Príncipe", "Antoine de Saint-Exupéry", "9781234567892"},
+        {"Memórias Póstumas de Brás Cubas", "Machado de Assis", "9781234567893"},
+        {"Orgulho e Preconceito", "Jane Austen", "9781234567894"}
+    };
+
+    string isbnProcurado;
+    cout << "Digite o ISBN do livro que deseja buscar: ";
+    cin >> isbnProcurado;
+
+    Livro resultado;
+    if (buscaBinaria(biblioteca, isbnProcurado, resultado)) {
+        cout << "Livro encontrado!\n";
+        cout << "Título: " << resultado.titulo << "\n";
+        cout << "Autor: " << resultado.autor << "\n";
+        cout << "ISBN: " << resultado.isbn << "\n";
+    } else {
+        cout << "Livro com ISBN " << isbnProcurado << " não encontrado.\n";
+    }
+
+    return 0;
+}
