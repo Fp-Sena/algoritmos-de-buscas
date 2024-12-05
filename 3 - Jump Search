@@ -1,0 +1,37 @@
+#include <iostream>
+#include <cmath> // Para a função sqrt
+using namespace std;
+
+int buscaPorSalto(int vetor[], int tamanho, int alvo) {
+    int salto = sqrt(tamanho);
+
+    int anterior = 0;
+
+    while (vetor[min(salto, tamanho) - 1] < alvo) {
+        anterior = salto; // Move para o próximo bloco
+        salto += sqrt(tamanho); // Incrementa o salto
+
+        if (anterior >= tamanho)
+            return -1;
+    }
+    for (int i = anterior; i < min(salto, tamanho); i++) {
+        if (vetor[i] == alvo)
+            return i;
+    }
+    return -1;
+}
+
+int main() {
+    int lista[] = {3, 6, 8, 12, 15, 18, 22, 25, 30, 35};
+    int tamanho = sizeof(lista) / sizeof(lista[0]);
+    int alvo = 18;
+
+    int resultado = buscaPorSalto(lista, tamanho, alvo);
+
+    if (resultado != -1)
+        printf("Elemento %d encontrado no índice %d\n", alvo, resultado);
+    else
+        printf("Elemento %d não encontrado\n", alvo);
+
+    return 0;
+}
