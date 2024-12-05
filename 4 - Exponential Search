@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+int buscaBinaria(int vetor[], int inicio, int fim, int alvo) {
+    while (inicio <= fim) {
+        int meio = inicio + (fim - inicio) / 2;
+
+        if (vetor[meio] == alvo) {
+            return meio;
+        } else if (vetor[meio] < alvo) {
+            inicio = meio + 1;
+        } else {
+            fim = meio - 1;
+        }
+    }
+    return -1;
+}
+
+int buscaExponencial(int vetor[], int tamanho, int alvo) {
+    // Verifica se o primeiro elemento é o alvo
+    if (vetor[0] == alvo) {
+        return 0;
+    }
+
+    int indice = 1;
+    while (indice < tamanho && vetor[indice] <= alvo) {
+        indice *= 2;
+    }
+
+    return buscaBinaria(vetor, indice / 2, min(indice, tamanho - 1), alvo);
+}
+
+int main() {
+    int lista[] = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
+    int tamanho = sizeof(lista) / sizeof(lista[0]);
+    int alvo = 15;
+
+    int resultado = buscaExponencial(lista, tamanho, alvo);
+    if (resultado != -1) {
+        cout << "Elemento " << alvo << " encontrado no índice " << resultado << endl;
+    } else {
+        cout << "Elemento " << alvo << " não encontrado" << endl;
+    }
+
+    return 0;
+}
