@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <thread>
+using namespace std;
+
+void exibirVetor(const vector<int>& vetor) {
+    for (int elemento : vetor) {
+        cout << elemento << " ";
+    }
+    cout << endl;
+}
+
+void mesclar(vector<int>& vetor, int inicio, int meio, int fim) {
+    int tamanhoEsquerda = meio - inicio + 1;
+    int tamanhoDireita = fim - meio;
+
+    vector<int> vetorEsquerda(tamanhoEsquerda);
+    vector<int> vetorDireita(tamanhoDireita);
+
+    for (int i = 0; i < tamanhoEsquerda; i++)
+        vetorEsquerda[i] = vetor[inicio + i];
+    for (int i = 0; i < tamanhoDireita; i++)
+        vetorDireita[i] = vetor[meio + 1 + i];
+
+    int i = 0, j = 0, k = inicio;
+
+    while (i < tamanhoEsquerda && j < tamanhoDireita) {
+        if (vetorEsquerda[i] <= vetorDireita[j]) {
+            vetor[k] = vetorEsquerda[i];
+            i++;
+        } else {
+            vetor[k] = vetorDireita[j];
+            j++;
+        }
+        k++;
+        exibirVetor(vetor);
+        this_thread::sleep_for(chrono::milliseconds(200));
+    }
+
+    while (i < tamanhoEsquerda) {
+        vetor[k] = vetorEsquerda[i];
+        i++;
+        k++;
+        exibirVetor(vetor);
+        this_thread::sleep_for(chrono::milliseconds(200));
+    }
+
+    while (j < tamanhoDireita) {
+        vetor[k] = vetorDireita[j];
+        j++;
+        k++;
+        exibirVetor(vetor);
+        this_thread::sleep_for(chrono::milliseconds(200));
+    }
+}
+
+void ordenarPorMescla(vector<int>& vetor, int inicio, int fim) {
+    if (inicio < fim) {
+        int meio = inicio + (fim - inicio) / 2;
+        ordenarPorMescla(vetor, inicio, meio);
+        ordenarPorMescla(vetor, meio + 1, fim);
+        mesclar(vetor, inicio, meio, fim);
+    }
+}
+
+int main() {
+    vector<int> vetor = {38, 27, 43, 3, 9, 82, 10};
+
+    cout << "Vetor original: ";
+    exibirVetor(vetor);
+
+    ordenarPorMescla(vetor, 0, vetor.size() - 1);
+
+    cout << "Vetor ordenado (Merge Sort): ";
+    exibirVetor(vetor);
+
+    return 0;
+}
