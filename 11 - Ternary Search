@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int pesquisaTernaria(vector<int>& vetor, int esquerdo, int direito, int chave) {
+    if (direito >= esquerdo) {
+        int meio1 = esquerdo + (direito - esquerdo) / 3;
+        int meio2 = direito - (direito - esquerdo) / 3;
+
+        if (vetor[meio1] == chave) {
+            return meio1;
+        }
+        if (vetor[meio2] == chave) {
+            return meio2;
+        }
+
+        if (chave < vetor[meio1]) {
+            return pesquisaTernaria(vetor, esquerdo, meio1 - 1, chave);
+        }
+        else if (chave > vetor[meio2]) {
+            return pesquisaTernaria(vetor, meio2 + 1, direito, chave);
+        }
+        else {
+            return pesquisaTernaria(vetor, meio1 + 1, meio2 - 1, chave);
+        }
+    }
+
+    return -1;
+}
+
+int main() {
+    vector<int> vetor = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int chave = 7;
+    
+    int resultado = pesquisaTernaria(vetor, 0, vetor.size() - 1, chave);
+
+    if (resultado != -1) {
+        cout << "Elemento encontrado no índice: " << resultado << endl;
+    } else {
+        cout << "Elemento não encontrado." << endl;
+    }
+
+    return 0;
+}
