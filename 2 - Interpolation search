@@ -1,0 +1,49 @@
+#include <iostream>
+using namespace std;
+
+int buscaPorInterpolacao(int vetor[], int tamanho, int alvo) {
+    int inicio = 0, fim = tamanho - 1;
+
+    while (inicio <= fim && alvo >= vetor[inicio] && alvo <= vetor[fim]) {
+    
+        if (inicio == fim) {
+            if (vetor[inicio] == alvo) return inicio;
+            return -1;
+        }
+        int pos = inicio + ((alvo - vetor[inicio]) * (fim - inicio)) / (vetor[fim] - vetor[inicio]);
+
+        if (vetor[pos] == alvo)
+            return pos;
+
+        if (vetor[pos] < alvo)
+            inicio = pos + 1; // Busca à direita
+        else
+            fim = pos - 1; // Busca à esquerda
+    }
+
+    return -1;
+}
+
+int main() {
+    int listaUniforme[] = {10, 20, 30, 40, 50};
+    int tamanhoUniforme = sizeof(listaUniforme) / sizeof(listaUniforme[0]);
+    int alvoUniforme = 40;
+
+    int listaNaoUniforme[] = {3, 6, 8, 12, 15, 25, 50};
+    int tamanhoNaoUniforme = sizeof(listaNaoUniforme) / sizeof(listaNaoUniforme[0]);
+    int alvoNaoUniforme = 25;
+
+    int resultadoUniforme = buscaPorInterpolacao(listaUniforme, tamanhoUniforme, alvoUniforme);
+    if (resultadoUniforme != -1)
+        printf("Elemento %d encontrado no índice %d (Lista Uniforme)\n", alvoUniforme, resultadoUniforme);
+    else
+        printf("Elemento %d não encontrado (Lista Uniforme)\n", alvoUniforme);
+
+    int resultadoNaoUniforme = buscaPorInterpolacao(listaNaoUniforme, tamanhoNaoUniforme, alvoNaoUniforme);
+    if (resultadoNaoUniforme != -1)
+        printf("Elemento %d encontrado no índice %d (Lista Não Uniforme)\n", alvoNaoUniforme, resultadoNaoUniforme);
+    else
+        printf("Elemento %d não encontrado (Lista Não Uniforme)\n", alvoNaoUniforme);
+
+    return 0;
+}
