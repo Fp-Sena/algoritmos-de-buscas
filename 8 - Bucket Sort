@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+void ordenacaoInsercao(vector<float>& balde) {
+    int tamanho = balde.size();
+    for (int i = 1; i < tamanho; i++) {
+        float chave = balde[i];
+        int j = i - 1;
+
+        while (j >= 0 && balde[j] > chave) {
+            balde[j + 1] = balde[j];
+            j--;
+        }
+        balde[j + 1] = chave;
+    }
+}
+
+void ordenacaoBalde(vector<float>& vetor) {
+    int tamanho = vetor.size();
+
+    vector<vector<float>> baldes(10);
+
+    for (int i = 0; i < tamanho; i++) {
+        int indice = vetor[i] * 10;  // Encontra o índice do balde
+        baldes[indice].push_back(vetor[i]);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        if (!baldes[i].empty()) {
+            ordenacaoInsercao(baldes[i]);
+        }
+    }
+
+    int indice = 0;
+    for (int i = 0; i < 10; i++) {
+        for (float numero : baldes[i]) {
+            vetor[indice++] = numero;
+        }
+    }
+}
+
+void imprimirVetor(const vector<float>& vetor) {
+    for (float numero : vetor) {
+        cout << numero << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    vector<float> vetor = {0.42, 0.32, 0.56, 0.23, 0.12, 0.75, 0.88, 0.99, 0.53};
+
+    cout << "Vetor original: ";
+    imprimirVetor(vetor);
+
+    ordenacaoBalde(vetor);
+
+    cout << "Vetor ordenado: ";
+    imprimirVetor(vetor);
+
+    return 0;
+}
